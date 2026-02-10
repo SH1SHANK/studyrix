@@ -78,9 +78,11 @@ const config: Config = {
       },
       // Neo-Brutalist Shadow System
       boxShadow: {
+        "neo-xs": "2px 2px 0px 0px rgba(0,0,0,1)",
+        "neo-sm": "3px 3px 0px 0px rgba(0,0,0,1)",
         neo: "4px 4px 0px 0px rgba(0,0,0,1)",
-        "neo-lg": "8px 8px 0px 0px rgba(0,0,0,1)",
-        "neo-xl": "12px 12px 0px 0px rgba(0,0,0,1)",
+        "neo-lg": "6px 6px 0px 0px rgba(0,0,0,1)",
+        "neo-xl": "8px 8px 0px 0px rgba(0,0,0,1)",
       },
       keyframes: {
         "progress-stripes": {

@@ -31,8 +31,9 @@ export function ViewSwitcher({
   );
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="hidden sm:flex items-center gap-2 overflow-x-auto whitespace-nowrap">
+    <div className="flex items-center gap-1.5">
+      {/* Desktop: inline pill tabs */}
+      <div className="hidden sm:flex items-center gap-1.5 overflow-x-auto whitespace-nowrap">
         {views.map((view) => {
           const isActive = view.id === activeId;
           return (
@@ -43,17 +44,21 @@ export function ViewSwitcher({
               aria-pressed={isActive}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "shrink-0 min-h-[44px] border-2 border-black px-3 py-2 text-[10px] font-black uppercase shadow-[1px_1px_0px_0px_#000] transition-colors duration-150 transition-transform active:scale-95 motion-reduce:transition-none",
-                isActive ? "bg-black text-white" : "bg-white hover:bg-yellow-50",
+                "shrink-0 h-8 border-2 border-black px-2.5 text-[10px] font-black uppercase tracking-wide transition-all duration-150 active:scale-95 motion-reduce:transition-none",
+                isActive
+                  ? "bg-stone-900 text-white shadow-[2px_2px_0_#000]"
+                  : "bg-white text-stone-600 shadow-[1px_1px_0_#000] hover:bg-[#FFF8E1] hover:text-stone-900",
               )}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5">
                 {view.label}
                 {typeof view.count === "number" && (
                   <span
                     className={cn(
-                      "border-2 border-black px-1.5 py-0.5 text-[9px] leading-none shadow-[1px_1px_0px_0px_#000]",
-                      isActive ? "bg-white text-black" : "bg-yellow-50",
+                      "inline-flex items-center justify-center min-w-[16px] h-4 px-1 border border-black text-[8px] font-black leading-none",
+                      isActive
+                        ? "bg-white text-black"
+                        : "bg-[#FFF8E1] text-stone-700",
                     )}
                   >
                     {view.count}
@@ -64,6 +69,8 @@ export function ViewSwitcher({
           );
         })}
       </div>
+
+      {/* Mobile: dropdown */}
       <div className="sm:hidden w-full">
         <Menu open={open} onOpenChange={setOpen}>
           <Menu.Trigger asChild>
@@ -71,23 +78,37 @@ export function ViewSwitcher({
               type="button"
               aria-label={label}
               aria-expanded={open}
-              className="w-full h-11 min-h-[44px] border-2 border-black bg-white px-3 text-xs font-black uppercase shadow-[2px_2px_0px_0px_#000] flex items-center justify-between"
+              className="w-full h-9 border-2 border-black bg-white px-3 text-[11px] font-black uppercase shadow-[2px_2px_0_#000] flex items-center justify-between"
             >
-              <span>{active?.label ?? label}</span>
-              <ChevronDown className="h-4 w-4" aria-hidden="true" />
+              <span className="flex items-center gap-2">
+                {active?.label ?? label}
+                {typeof active?.count === "number" && (
+                  <span className="inline-flex items-center justify-center min-w-[16px] h-4 px-1 border border-black bg-[#FFF8E1] text-[8px] font-black leading-none">
+                    {active.count}
+                  </span>
+                )}
+              </span>
+              <ChevronDown
+                className={cn(
+                  "h-3.5 w-3.5 transition-transform duration-150",
+                  open && "rotate-180",
+                )}
+                aria-hidden="true"
+              />
             </button>
           </Menu.Trigger>
           <Menu.Content
             align="start"
-            sideOffset={6}
-            className="border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000] min-w-[200px] max-w-[calc(100vw-2rem)]"
+            sideOffset={4}
+            className="border-2 border-black bg-white shadow-[3px_3px_0_#000] min-w-[180px] max-w-[calc(100vw-2rem)]"
           >
             {views.map((view) => (
               <Menu.Item
                 key={view.id}
                 className={cn(
-                  "flex items-center justify-between gap-2 px-3 py-2 text-xs font-black uppercase tracking-wide hover:bg-yellow-100 focus:bg-yellow-100",
-                  view.id === activeId && "bg-yellow-50",
+                  "flex items-center justify-between gap-2 px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-[#FFF8E1] focus:bg-[#FFF8E1]",
+                  view.id === activeId &&
+                    "bg-stone-900 text-white hover:bg-stone-800 focus:bg-stone-800",
                 )}
                 onSelect={() => {
                   onChange(view.id);
@@ -96,7 +117,14 @@ export function ViewSwitcher({
               >
                 <span>{view.label}</span>
                 {typeof view.count === "number" && (
-                  <span className="border border-black bg-white px-1.5 py-0.5 text-[9px] shadow-[1px_1px_0px_0px_#000]">
+                  <span
+                    className={cn(
+                      "inline-flex items-center justify-center min-w-[16px] h-4 px-1 border border-black text-[8px] font-black leading-none",
+                      view.id === activeId
+                        ? "bg-white text-black"
+                        : "bg-[#FFF8E1]",
+                    )}
+                  >
                     {view.count}
                   </span>
                 )}

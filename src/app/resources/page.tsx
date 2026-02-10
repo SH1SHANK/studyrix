@@ -25,8 +25,15 @@ import { useOfflineManager } from "@/hooks/useOfflineManager";
 import { useOnlineStatus } from "@/hooks/useOptimizations";
 import { buildResourceId, parseResourceId } from "@/lib/resources/resource-id";
 import { cn } from "@/lib/utils";
-import { DRIVE_FOLDER_MIME, type DriveItem, type ResourceCourse } from "@/types/resources";
-import { CommandCenter, type CommandItem } from "@/components/resources/CommandCenter";
+import {
+  DRIVE_FOLDER_MIME,
+  type DriveItem,
+  type ResourceCourse,
+} from "@/types/resources";
+import {
+  CommandCenter,
+  type CommandItem,
+} from "@/components/resources/CommandCenter";
 
 type ResourceTab = "academic";
 
@@ -42,12 +49,12 @@ type CrossCourseResult = {
 const TAB_ORDER: ResourceTab[] = ["academic"];
 
 const COURSE_PALETTE = [
-  { bg: "bg-[#E9DDFF]", accent: "bg-[#5B3DF3]" },
-  { bg: "bg-[#FFD7D7]", accent: "bg-[#D92D20]" },
-  { bg: "bg-[#D8F5E4]", accent: "bg-[#039855]" },
-  { bg: "bg-[#DDEBFF]", accent: "bg-[#2E5AAC]" },
-  { bg: "bg-[#FFE9B6]", accent: "bg-[#B54708]" },
-  { bg: "bg-[#E8F1FF]", accent: "bg-[#3B82F6]" },
+  { border: "#8B5CF6", dot: "bg-[#8B5CF6]" },
+  { border: "#F43F5E", dot: "bg-[#F43F5E]" },
+  { border: "#10B981", dot: "bg-[#10B981]" },
+  { border: "#0EA5E9", dot: "bg-[#0EA5E9]" },
+  { border: "#F59E0B", dot: "bg-[#F59E0B]" },
+  { border: "#6366F1", dot: "bg-[#6366F1]" },
 ];
 
 const DEFAULT_SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -88,11 +95,10 @@ const ResourceFolderCard = memo(function ResourceFolderCard({
   const paletteIndex =
     hashCourseKey(course.courseID || course.courseName || "course") %
     COURSE_PALETTE.length;
-  const palette =
-    COURSE_PALETTE[paletteIndex] ??
+  const palette = COURSE_PALETTE[paletteIndex] ??
     COURSE_PALETTE[0] ?? {
-      bg: "bg-white",
-      accent: "bg-black",
+      border: "#000",
+      dot: "bg-black",
     };
   const isGrid = variant === "grid";
   const [menuOpen, setMenuOpen] = useState(false);
@@ -131,19 +137,23 @@ const ResourceFolderCard = memo(function ResourceFolderCard({
     }
   }, []);
   const menuItemClass =
-    "flex items-center gap-2 px-3 py-2 text-xs font-black uppercase tracking-wide hover:bg-yellow-100 focus:bg-yellow-100";
+    "flex items-center gap-2 px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-[#FFF8E1] focus:bg-[#FFF8E1]";
 
   const menuButtonClass = cn(
-    "h-11 w-11 min-h-[44px] min-w-[44px] border-2 border-black bg-white flex items-center justify-center shadow-[1px_1px_0px_0px_#000] transition-colors duration-150 transition-transform active:scale-95 hover:bg-yellow-50 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
-    isGrid ? "absolute right-3 top-3" : "ml-auto shrink-0",
+    "h-9 w-9 min-h-[36px] min-w-[36px] border-2 border-black bg-white flex items-center justify-center shadow-[1px_1px_0_#000] transition-all duration-150 active:scale-95 hover:bg-[#FFF8E1] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-1",
+    isGrid ? "absolute right-2 top-2" : "ml-auto shrink-0",
     isGrid
       ? "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto"
       : "opacity-100 sm:opacity-0 sm:pointer-events-none sm:group-hover:opacity-100 sm:group-hover:pointer-events-auto",
     menuOpen && "opacity-100 pointer-events-auto",
   );
 
+  const accentBorderStyle = { borderLeftColor: palette.border };
+
   return (
-    <div className={cn("group relative", isGrid ? "" : "flex items-center gap-3")}>
+    <div
+      className={cn("group relative", isGrid ? "" : "flex items-center gap-2")}
+    >
       <button
         type="button"
         disabled={!hasAssets}
@@ -159,87 +169,85 @@ const ResourceFolderCard = memo(function ResourceFolderCard({
         onPointerCancel={handleLongPressCancel}
         onPointerMove={handleLongPressCancel}
         className={cn(
-          "w-full border-2 border-black p-3 text-left shadow-[1px_1px_0px_0px_#000] transition-transform transition-shadow duration-150 overflow-hidden active:scale-[0.99] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
-          hasAssets ? palette.bg : "bg-neutral-100 opacity-80 cursor-not-allowed",
-          hasAssets &&
-            "hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#000]",
+          "w-full border-2 border-black text-left shadow-[3px_3px_0_#000] transition-all duration-150 overflow-hidden active:scale-[0.98] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
+          hasAssets
+            ? "bg-white"
+            : "bg-neutral-100 opacity-70 cursor-not-allowed",
+          hasAssets && "hover:-translate-y-0.5 hover:shadow-[4px_4px_0_#000]",
           isGrid
-            ? "aspect-[4/3] sm:aspect-square flex flex-col"
-            : "flex-1 flex items-center gap-3",
+            ? "flex flex-col border-l-4 p-3"
+            : "flex-1 flex items-center gap-3 border-l-4 px-3 py-2",
         )}
+        style={hasAssets ? accentBorderStyle : undefined}
       >
         {isGrid ? (
           <>
-            <div className="flex items-start justify-between gap-2">
-              <span className="flex h-11 w-11 items-center justify-center border-2 border-black bg-[#FFD700] shadow-[2px_2px_0px_0px_#000]">
-                <Folder className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                {slotBadge && (
-                  <span className="border-2 border-black bg-white px-2 py-0.5 text-[9px] font-black uppercase leading-none shadow-[1px_1px_0px_0px_#000]">
-                    Slot {slotBadge}
-                  </span>
-                )}
-                {isFavorite && (
-                  <span className="border-2 border-black bg-white px-2 py-0.5 text-[9px] font-black uppercase leading-none shadow-[1px_1px_0px_0px_#000]">
-                    Starred
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="mt-auto pt-3 min-w-0">
-              <h3 className="text-sm sm:text-base font-black uppercase tracking-tight text-stone-900 line-clamp-3">
+            <div className="flex items-start justify-between gap-2 min-w-0">
+              <h3 className="text-[13px] font-black uppercase tracking-tight text-stone-900 line-clamp-2 leading-snug">
                 {course.courseName || course.courseID}
               </h3>
-              <div className="mt-1 flex items-center gap-2">
+              {isFavorite && (
+                <Star
+                  className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-500"
+                  aria-label="Starred"
+                />
+              )}
+            </div>
+            <div className="mt-auto pt-2 flex items-center justify-between gap-2 min-w-0">
+              <div className="flex items-center gap-1.5 min-w-0">
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "h-2.5 w-2.5 border border-black",
-                    palette.accent,
+                    "h-2 w-2 shrink-0 border border-black",
+                    palette.dot,
                   )}
                 />
-                <p className="text-[10px] font-bold uppercase tracking-wide text-stone-600">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-stone-500 truncate">
                   {course.courseID}
                 </p>
               </div>
-              {!hasAssets && (
-                <p className="mt-2 text-[10px] font-bold uppercase text-stone-400">
-                  Resources unavailable
-                </p>
+              {slotBadge && (
+                <span className="shrink-0 border border-black bg-[#FFF8E1] px-1.5 py-px text-[8px] font-black uppercase leading-none">
+                  {slotBadge}
+                </span>
               )}
             </div>
+            {!hasAssets && (
+              <p className="mt-1.5 text-[9px] font-bold uppercase text-stone-400">
+                Unavailable
+              </p>
+            )}
           </>
         ) : (
           <>
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <span className="flex h-10 w-10 items-center justify-center border-2 border-black bg-[#FFD700] shadow-[2px_2px_0px_0px_#000]">
-                <Folder className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-sm font-black uppercase tracking-tight text-stone-900 truncate">
+            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "h-2.5 w-2.5 shrink-0 border border-black",
+                  palette.dot,
+                )}
+              />
+              <div className="min-w-0 flex-1">
+                <h3 className="text-[13px] font-black uppercase tracking-tight text-stone-900 truncate leading-snug">
                   {course.courseName || course.courseID}
                 </h3>
-                <p className="text-[10px] font-bold uppercase tracking-wide text-stone-600">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-stone-500">
                   {course.courseID}
                 </p>
-                {!hasAssets && (
-                  <p className="mt-2 text-[10px] font-bold uppercase text-stone-400">
-                    Resources unavailable
-                  </p>
-                )}
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               {slotBadge && (
-                <span className="border-2 border-black bg-white px-2 py-0.5 text-[9px] font-black uppercase leading-none shadow-[1px_1px_0px_0px_#000]">
-                  Slot {slotBadge}
+                <span className="border border-black bg-[#FFF8E1] px-1.5 py-px text-[8px] font-black uppercase leading-none">
+                  {slotBadge}
                 </span>
               )}
               {isFavorite && (
-                <span className="border-2 border-black bg-white px-2 py-0.5 text-[9px] font-black uppercase leading-none shadow-[1px_1px_0px_0px_#000]">
-                  Starred
-                </span>
+                <Star
+                  className="h-3.5 w-3.5 fill-amber-400 text-amber-500"
+                  aria-label="Starred"
+                />
               )}
             </div>
           </>
@@ -253,13 +261,13 @@ const ResourceFolderCard = memo(function ResourceFolderCard({
             onClick={(event) => event.stopPropagation()}
             className={menuButtonClass}
           >
-            <MoreVertical className="h-4 w-4" aria-hidden="true" />
+            <MoreVertical className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         </Menu.Trigger>
         <Menu.Content
           align="end"
-          sideOffset={6}
-          className="border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000] min-w-[170px] max-w-[calc(100vw-2rem)] max-h-[min(60svh,320px)] overflow-y-auto"
+          sideOffset={4}
+          className="border-2 border-black bg-white shadow-[3px_3px_0_#000] min-w-[160px] max-w-[calc(100vw-2rem)] max-h-[min(60svh,320px)] overflow-y-auto"
         >
           <Menu.Item
             className={cn(menuItemClass, !hasAssets && "opacity-50")}
@@ -269,7 +277,7 @@ const ResourceFolderCard = memo(function ResourceFolderCard({
               handleOpen();
             }}
           >
-            <Folder className="h-4 w-4" aria-hidden="true" />
+            <Folder className="h-3.5 w-3.5" aria-hidden="true" />
             Open folder
           </Menu.Item>
           <Menu.Item
@@ -280,7 +288,7 @@ const ResourceFolderCard = memo(function ResourceFolderCard({
               onToggleFavorite(resourceId);
             }}
           >
-            <Star className="h-4 w-4" aria-hidden="true" />
+            <Star className="h-3.5 w-3.5" aria-hidden="true" />
             {isFavorite ? "Unstar" : "Star"}
           </Menu.Item>
         </Menu.Content>
@@ -338,7 +346,8 @@ export default function ResourcesPage() {
     updateOfflineStorageMode,
   });
   const hasSelection =
-    Boolean(departmentId) && typeof semesterId === "number" &&
+    Boolean(departmentId) &&
+    typeof semesterId === "number" &&
     Number.isFinite(semesterId);
 
   const [onboardingOpen, setOnboardingOpen] = useState(false);
@@ -350,16 +359,16 @@ export default function ResourcesPage() {
   const needsOnboarding = prefsLoaded && !hasSelection;
   const showOnboarding = needsOnboarding || (onboardingOpen && !hasSelection);
   const activeDepartmentId = showOnboarding
-    ? (draftDepartmentId || (departmentId && departmentId.length > 0
+    ? draftDepartmentId ||
+      (departmentId && departmentId.length > 0 ? departmentId : "")
+    : departmentId && departmentId.length > 0
       ? departmentId
-      : ""))
-    : (departmentId && departmentId.length > 0 ? departmentId : "");
+      : "";
   const departmentsQuery = useResourceFilters(null);
   const semestersQuery = useResourceFilters(
     activeDepartmentId.length > 0 ? activeDepartmentId : null,
   );
-  const shouldSearch =
-    hasSelection && trimmedDeferredSearch.length >= 2;
+  const shouldSearch = hasSelection && trimmedDeferredSearch.length >= 2;
   const searchQuery = useQuery({
     queryKey: [
       "resources-search",
@@ -443,11 +452,10 @@ export default function ResourcesPage() {
     [],
   );
   const gridClass = useMemo(
-    () =>
-      "grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
+    () => "grid gap-2.5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
     [],
   );
-  const rowClass = useMemo(() => "space-y-3", []);
+  const rowClass = useMemo(() => "space-y-2", []);
   const courseSearchIndex = useMemo(() => {
     return new Map(
       courses.map((course) => [course.courseID, buildSearchKey(course)]),
@@ -719,7 +727,6 @@ export default function ResourcesPage() {
     return items;
   }, [courses, handleOpenCourse]);
 
-
   const offlineCourses = useMemo(() => {
     const offlineEntries = Object.values(offlineFiles);
     const courseIds = new Set(
@@ -783,7 +790,6 @@ export default function ResourcesPage() {
     }
   }, [activeView]);
 
-
   useEffect(() => {
     if (cacheLimitMb === null || !Number.isFinite(cacheLimitMb)) return;
     if (cacheLimitMb <= 0) return;
@@ -796,66 +802,114 @@ export default function ResourcesPage() {
     void evict();
   }, [cacheLimitMb, offlineManager]);
 
-  const getCourseResourceId = useCallback((course: ResourceCourse) => {
-    return courseResourceIds.get(course.courseID) ?? null;
-  }, [courseResourceIds]);
+  const getCourseResourceId = useCallback(
+    (course: ResourceCourse) => {
+      return courseResourceIds.get(course.courseID) ?? null;
+    },
+    [courseResourceIds],
+  );
 
   return (
     <div className="min-h-screen bg-neutral-50 pb-24 transition-colors duration-300 relative isolate overflow-x-hidden">
       <DotPatternBackground />
 
       <div className="mx-auto max-w-5xl relative z-10">
-        <header className="bg-white border-b-4 border-black px-4 py-4 sm:px-6 shadow-[0_6px_0_#0a0a0a]">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <h1 className="font-display text-xl sm:text-2xl font-black uppercase text-stone-900 tracking-tight truncate">
-                Study Materials
-              </h1>
+        <header className="bg-white border-b-2 border-black px-3 py-2.5 sm:px-5 shadow-neo-sm">
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-base sm:text-lg font-black uppercase text-stone-900 tracking-tight shrink-0">
+              Materials
+            </h1>
+
+            {/* Inline search */}
+            <div className="flex-1 flex items-center gap-2 border-2 border-black bg-white px-2.5 py-1.5 shadow-[2px_2px_0_#000] min-w-0">
+              <Search
+                className="h-4 w-4 text-stone-400 shrink-0"
+                aria-hidden="true"
+              />
+              <label className="sr-only" htmlFor="studyrix-course-search">
+                Search courses or files
+              </label>
+              <input
+                id="studyrix-course-search"
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search courses…"
+                aria-label="Search courses or files"
+                name="resources-search"
+                autoComplete="off"
+                className="flex-1 bg-transparent text-[13px] font-bold placeholder:text-stone-400 focus-visible:outline-none min-w-0"
+                ref={searchInputRef}
+              />
+              {searchTerm.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchTerm("");
+                    searchInputRef.current?.focus();
+                  }}
+                  aria-label="Clear search"
+                  className="h-6 w-6 flex items-center justify-center transition-all duration-100 active:scale-90"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+              {isSearchStale && (
+                <span
+                  className="text-[9px] font-black uppercase text-stone-400 shrink-0"
+                  role="status"
+                  aria-live="polite"
+                >
+                  …
+                </span>
+              )}
             </div>
+
+            {/* Menu button */}
             <Menu open={overflowOpen} onOpenChange={setOverflowOpen}>
               <Menu.Trigger asChild>
                 <button
                   type="button"
                   aria-label="Open menu"
-                  className="h-11 w-11 min-h-[44px] min-w-[44px] border-2 border-black bg-white flex items-center justify-center shadow-[2px_2px_0_#0a0a0a] transition-transform transition-shadow transition-colors duration-150 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#0a0a0a] hover:bg-yellow-50 active:translate-y-0 active:shadow-[1px_1px_0_#0a0a0a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+                  className="h-9 w-9 min-h-[36px] min-w-[36px] border-2 border-black bg-white flex items-center justify-center shadow-[2px_2px_0_#000] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#000] hover:bg-[#FFF8E1] active:translate-y-0 active:shadow-[1px_1px_0_#000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-1"
                 >
-                  <MoreVertical className="h-5 w-5" aria-hidden="true" />
+                  <MoreVertical className="h-4 w-4" aria-hidden="true" />
                 </button>
               </Menu.Trigger>
               <Menu.Content
                 align="end"
-                sideOffset={8}
-                className="border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000] min-w-[200px] max-w-[calc(100vw-2rem)] max-h-[min(60svh,320px)] overflow-y-auto"
+                sideOffset={6}
+                className="border-2 border-black bg-white shadow-[3px_3px_0_#000] min-w-[180px] max-w-[calc(100vw-2rem)] max-h-[min(60svh,320px)] overflow-y-auto"
               >
-                <div className="px-3 py-2 text-[10px] font-black uppercase text-stone-500 border-b border-stone-200">
-                  Status: {syncStatus}
+                <div className="px-3 py-1.5 text-[9px] font-black uppercase text-stone-400 border-b border-stone-200">
+                  {syncStatus}
                 </div>
                 <Menu.Item
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-black uppercase tracking-wide hover:bg-yellow-100 focus:bg-yellow-100"
+                  className="flex items-center gap-2 px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-[#FFF8E1] focus:bg-[#FFF8E1]"
                   onSelect={() => router.push("/offline")}
                 >
                   Saved Materials
                 </Menu.Item>
                 <Menu.Item
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-black uppercase tracking-wide hover:bg-yellow-100 focus:bg-yellow-100"
+                  className="flex items-center gap-2 px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-[#FFF8E1] focus:bg-[#FFF8E1]"
                   onSelect={() => router.push("/downloads")}
                 >
                   Downloads
                 </Menu.Item>
                 <Menu.Item
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-black uppercase tracking-wide hover:bg-yellow-100 focus:bg-yellow-100"
+                  className="flex items-center gap-2 px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-[#FFF8E1] focus:bg-[#FFF8E1]"
                   onSelect={() => setCommandOpen(true)}
                 >
                   Quick Search
                 </Menu.Item>
                 <Menu.Item
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-black uppercase tracking-wide hover:bg-yellow-100 focus:bg-yellow-100"
+                  className="flex items-center gap-2 px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-[#FFF8E1] focus:bg-[#FFF8E1]"
                   onSelect={() => setShortcutsOpen(true)}
                 >
-                  Keyboard Shortcuts
+                  Shortcuts
                 </Menu.Item>
                 <Menu.Item
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-black uppercase tracking-wide hover:bg-yellow-100 focus:bg-yellow-100"
+                  className="flex items-center gap-2 px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-[#FFF8E1] focus:bg-[#FFF8E1]"
                   onSelect={() => router.push("/settings")}
                 >
                   Settings
@@ -865,128 +919,43 @@ export default function ResourcesPage() {
           </div>
         </header>
 
-        <section className="bg-white border-b-4 border-black px-4 py-4 sm:px-6 shadow-[0_6px_0_#0a0a0a]">
-          <div
-            role="tablist"
-            aria-label="Resource repositories"
-            className="flex items-center border-2 border-black bg-white shadow-[2px_2px_0_#0a0a0a] overflow-hidden"
-            onKeyDown={handleTabKeyDown}
-          >
-            {TAB_ORDER.map((tab, index) => {
-              const label =
-                tab === "academic" ? "Academic Materials" : "Personal Materials";
-              return (
-                <button
-                  key={tab}
-                  ref={(el) => {
-                    tabRefs.current[index] = el;
-                  }}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeTab === tab}
-                  tabIndex={activeTab === tab ? 0 : -1}
-                  onClick={() => setActiveTab(tab)}
-                  className={cn(
-                    "flex-1 px-4 py-2.5 text-xs font-black uppercase tracking-wide transition-colors duration-200",
-                    activeTab === tab
-                      ? "bg-stone-900 text-white"
-                      : "bg-white text-stone-700 hover:bg-yellow-100",
-                  )}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="bg-white border-b-4 border-black px-4 py-4 sm:px-6 shadow-[0_6px_0_#0a0a0a]">
-          <div className="flex items-center justify-between mb-2">
-            <label className="sr-only" htmlFor="studyrix-course-search">
-              Search courses or files
-            </label>
-            {isSearchStale && (
-              <span
-                className="text-[10px] font-black uppercase text-stone-400"
-                role="status"
-                aria-live="polite"
-              >
-                Filtering…
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-3 border-[3px] border-black bg-white px-4 py-3 shadow-[2px_2px_0px_0px_#000]">
-            <Search className="h-5 w-5 text-neutral-600" aria-hidden="true" />
-            <input
-              id="studyrix-course-search"
-              type="search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search courses or files… e.g. math"
-              aria-label="Search courses or files"
-              name="resources-search"
-              autoComplete="off"
-              className="flex-1 bg-transparent text-base font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-              ref={searchInputRef}
-            />
-            {searchTerm.length > 0 && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchTerm("");
-                  searchInputRef.current?.focus();
-                }}
-                aria-label="Clear search"
-                className="h-9 w-9 min-h-[44px] min-w-[44px] border-2 border-black bg-white flex items-center justify-center shadow-[1px_1px_0px_0px_#000] transition-transform active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
-          </div>
-        </section>
-
         {hasSearchQuery && (
-          <section className="bg-white border-b-4 border-black px-4 py-5 sm:px-6 shadow-[0_6px_0_#0a0a0a]">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <div>
-                <h2 className="text-sm font-black uppercase tracking-wide text-stone-700">
-                  Search Results
-                </h2>
-                <p className="text-[11px] font-bold uppercase text-stone-500">
-                  Across all courses
-                </p>
-              </div>
+          <section className="bg-white border-b-2 border-black px-3 py-3 sm:px-5 shadow-neo-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h2 className="text-[11px] font-black uppercase tracking-wide text-stone-500">
+                Search Results
+              </h2>
               {effectiveSearchTruncated && (
-                <span className="border-2 border-black bg-yellow-50 px-2 py-1 text-[9px] font-black uppercase shadow-[2px_2px_0px_0px_#000]">
-                  Results capped
+                <span className="border border-black bg-[#FFF8E1] px-1.5 py-0.5 text-[8px] font-black uppercase">
+                  Capped
                 </span>
               )}
             </div>
 
             {!shouldSearch ? (
-              <div className="border-2 border-black bg-neutral-50 px-4 py-3 text-xs font-bold uppercase text-stone-500 shadow-[2px_2px_0px_0px_#000]">
-                Type at least 2 characters to search files.
+              <div className="border-2 border-black bg-neutral-50 px-3 py-2.5 text-[11px] font-bold uppercase text-stone-500 shadow-neo-xs">
+                Type at least 2 characters to search.
               </div>
             ) : effectiveSearchStatus === "loading" ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {Array.from({ length: 3 }).map((_, index) => (
-                  <RetroSkeleton key={index} className="h-16 w-full" />
+                  <RetroSkeleton key={index} className="h-12 w-full" />
                 ))}
               </div>
             ) : effectiveSearchStatus === "error" ? (
-              <div className="border-2 border-black bg-red-50 p-4 shadow-[3px_3px_0px_0px_#000]">
-                <p className="text-xs font-bold uppercase text-red-600">
-                  Unable to search right now. Please try again.
+              <div className="border-2 border-black bg-red-50 p-3 shadow-neo-xs">
+                <p className="text-[11px] font-bold uppercase text-red-600">
+                  Unable to search. Please try again.
                 </p>
               </div>
             ) : effectiveSearchResults.length === 0 ? (
-              <div className="border-2 border-black bg-white p-4 shadow-[3px_3px_0px_0px_#000]">
-                <p className="text-xs font-bold uppercase text-neutral-600">
+              <div className="border-2 border-black bg-white p-3 shadow-neo-xs">
+                <p className="text-[11px] font-bold uppercase text-neutral-600">
                   No materials match your search.
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {effectiveSearchResults.map((result) => {
                   const Icon = getSearchIcon(result.item.mimeType);
                   const isFolderResult =
@@ -1000,21 +969,21 @@ export default function ResourcesPage() {
                   return (
                     <div
                       key={result.resourceId}
-                      className="group w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-2 border-black px-4 py-3 text-left shadow-[1px_1px_0px_0px_#000] transition-transform transition-shadow transition-colors duration-150 bg-white even:bg-[#FFFCF3] hover:bg-yellow-50/40 hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#000]"
+                      className="group w-full flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-2 border-black px-3 py-2.5 text-left shadow-[2px_2px_0_#000] transition-all duration-150 bg-white even:bg-[#FFFCF3] hover:bg-[#FFF8E1]/40 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#000]"
                     >
                       <button
                         type="button"
                         onClick={() => handleOpenSearchResult(result)}
-                        className="flex flex-1 min-w-0 items-center gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+                        className="flex flex-1 min-w-0 items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
                       >
-                        <span className="flex h-10 w-10 items-center justify-center border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000]">
-                          <Icon className="h-5 w-5" aria-hidden="true" />
+                        <span className="flex h-8 w-8 items-center justify-center border-2 border-black bg-white shadow-[1px_1px_0_#000] shrink-0">
+                          <Icon className="h-4 w-4" aria-hidden="true" />
                         </span>
                         <div className="min-w-0">
-                          <p className="text-sm font-black uppercase text-stone-900 truncate">
+                          <p className="text-[13px] font-black uppercase text-stone-900 truncate leading-snug">
                             {result.item.name}
                           </p>
-                          <p className="text-[11px] font-bold uppercase text-stone-500/80">
+                          <p className="text-[10px] font-bold uppercase text-stone-500/80">
                             {courseLabel} • {pathLabel} •{" "}
                             {isFolderResult ? "Folder" : "File"}
                           </p>
@@ -1029,32 +998,26 @@ export default function ResourcesPage() {
         )}
 
         {activeTab === "academic" ? (
-          <section className="bg-white border-b-4 border-black px-4 py-6 sm:px-6 shadow-[0_6px_0_#0a0a0a]">
+          <section className="bg-white border-b-2 border-black px-3 py-4 sm:px-5 shadow-neo-xs">
             {coursesQuery.isError ? (
-              <div className="border-2 border-black bg-red-50 p-6 shadow-[4px_4px_0px_0px_#000]">
-                <p className="text-sm font-bold text-red-600">
+              <div className="border-2 border-black bg-red-50 p-4 shadow-neo-sm">
+                <p className="text-[13px] font-bold text-red-600">
                   Unable to load resources. Please try again.
                 </p>
-                <div className="mt-4">
+                <div className="mt-3">
                   <OfflineFallbackButton />
                 </div>
               </div>
             ) : coursesQuery.isLoading ? (
               <div className={gridClass}>
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <RetroSkeleton
-                    key={index}
-                    className="w-full aspect-[4/3] sm:aspect-square"
-                  />
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <RetroSkeleton key={index} className="w-full h-24" />
                 ))}
               </div>
             ) : !prefsLoaded ? (
               <div className={gridClass}>
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <RetroSkeleton
-                    key={index}
-                    className="w-full aspect-[4/3] sm:aspect-square"
-                  />
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <RetroSkeleton key={index} className="w-full h-24" />
                 ))}
               </div>
             ) : !hasSelection ? (
@@ -1093,22 +1056,19 @@ export default function ResourcesPage() {
                 )}
               </div>
             ) : (
-              <div className="space-y-6">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-black uppercase text-stone-500">
-                      Smart views
-                    </p>
-                    <p className="text-sm font-black uppercase text-stone-900">
-                      Pick a focus
-                    </p>
-                  </div>
+              <div className="space-y-3">
+                <div className="flex items-center">
                   <ViewSwitcher
                     views={viewOptions}
                     activeId={activeView}
                     onChange={(next) =>
                       setActiveView(
-                        next as "courses" | "recent" | "starred" | "offline" | "tagged",
+                        next as
+                          | "courses"
+                          | "recent"
+                          | "starred"
+                          | "offline"
+                          | "tagged",
                       )
                     }
                     label="Views"
@@ -1145,10 +1105,10 @@ export default function ResourcesPage() {
             )}
           </section>
         ) : (
-          <section className="bg-white border-b-4 border-black px-4 py-8 sm:px-6 shadow-[0_6px_0_#0a0a0a]">
-            <div className="border-2 border-dashed border-black bg-neutral-50 p-6 text-center">
-              <p className="text-sm font-bold uppercase text-stone-600">
-                Currently in development, coming soon!
+          <section className="bg-white border-b-2 border-black px-3 py-4 sm:px-5 shadow-neo-xs">
+            <div className="border-2 border-dashed border-black bg-neutral-50 p-4 text-center">
+              <p className="text-[13px] font-bold uppercase text-stone-600">
+                Coming soon
               </p>
             </div>
           </section>
@@ -1179,16 +1139,16 @@ export default function ResourcesPage() {
           aria-modal="true"
           aria-label="Department and semester selection"
         >
-          <div className="w-full h-[100svh] sm:h-auto sm:max-h-[90vh] sm:max-w-2xl bg-white border-4 border-black shadow-[12px_12px_0_#0a0a0a] flex flex-col">
-            <div className="border-b-4 border-black bg-yellow-400 px-5 py-4">
-              <h2 className="text-xl sm:text-2xl font-black uppercase">
-                Select Department & Semester
+          <div className="w-full h-svh sm:h-auto sm:max-h-[90vh] sm:max-w-lg bg-white border-4 border-black shadow-neo-xl flex flex-col">
+            <div className="border-b-4 border-black bg-[#FFD700] px-4 py-3">
+              <h2 className="text-lg sm:text-xl font-black uppercase">
+                Department & Semester
               </h2>
-              <p className="text-xs sm:text-sm font-bold uppercase text-stone-800">
-                Select your department and semester to view study materials
+              <p className="text-[11px] font-bold uppercase text-stone-700">
+                Choose to filter study materials
               </p>
             </div>
-            <div className="p-5 space-y-4 overflow-y-auto">
+            <div className="p-4 space-y-3 overflow-y-auto">
               <div className="space-y-2">
                 <label
                   className="text-[11px] font-black uppercase text-stone-600"
@@ -1203,9 +1163,11 @@ export default function ResourcesPage() {
                     setDraftDepartmentId(event.target.value);
                     setDraftSemesterId(null);
                   }}
-                  disabled={departmentsQuery.isLoading || departments.length === 0}
+                  disabled={
+                    departmentsQuery.isLoading || departments.length === 0
+                  }
                   name="department"
-                  className="w-full h-12 border-[3px] border-black bg-white px-3 text-sm font-black uppercase shadow-[3px_3px_0px_0px_#000] focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:opacity-60"
+                  className="w-full h-10 border-2 border-black bg-white px-3 text-[13px] font-black uppercase shadow-neo-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:opacity-60"
                 >
                   <option value="" disabled>
                     {departmentsQuery.isLoading
@@ -1241,7 +1203,7 @@ export default function ResourcesPage() {
                   }}
                   disabled={!draftDepartmentId}
                   name="semester"
-                  className="w-full h-12 border-[3px] border-black bg-white px-3 text-sm font-black uppercase shadow-[3px_3px_0px_0px_#000] focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:opacity-60"
+                  className="w-full h-10 border-2 border-black bg-white px-3 text-[13px] font-black uppercase shadow-neo-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:opacity-60"
                 >
                   <option value="" disabled>
                     {draftDepartmentId
@@ -1261,7 +1223,7 @@ export default function ResourcesPage() {
                 )}
               </div>
             </div>
-            <div className="border-t-4 border-black bg-stone-50 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="border-t-4 border-black bg-stone-50 px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-2.5">
               {!needsOnboarding && (
                 <button
                   type="button"

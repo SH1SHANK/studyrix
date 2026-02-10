@@ -46,6 +46,14 @@
   --ring: #0a0a0a;
 
   --radius: 0rem;
+
+  /* Refined accent palette for card stripes */
+  --accent-violet: #8b5cf6;
+  --accent-rose: #f43f5e;
+  --accent-emerald: #10b981;
+  --accent-sky: #0ea5e9;
+  --accent-amber: #f59e0b;
+  --accent-indigo: #6366f1;
 }
 
 @layer base {

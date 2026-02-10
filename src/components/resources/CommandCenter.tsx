@@ -3,7 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog";
 import { cn } from "@/lib/utils";
 
 export type CommandItem = {
@@ -108,16 +113,16 @@ export function CommandCenter({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 !left-0 !right-0 !bottom-0 !top-auto !translate-x-0 !translate-y-0 w-full sm:!left-[50%] sm:!right-auto sm:!bottom-auto sm:!top-[50%] sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:w-[95vw]">
-        <DialogHeader className="flex-row items-center justify-between gap-3 p-4 border-b-4 border-black bg-yellow-400">
-          <DialogTitle className="text-xl font-black uppercase">
+      <DialogContent className="max-w-2xl p-0 !left-0 !right-0 !bottom-0 !top-auto !translate-x-0 !translate-y-0 w-full sm:!left-[50%] sm:!right-auto sm:!bottom-auto sm:!top-[50%] sm:!translate-x-[-50%] sm:!translate-y-[-50%] sm:w-[90vw]">
+        <DialogHeader className="flex-row items-center justify-between gap-2 p-3 border-b-4 border-black bg-[#FFD700]">
+          <DialogTitle className="text-lg font-black uppercase">
             Quick Search
           </DialogTitle>
           {onOpenShortcuts && (
             <button
               type="button"
               onClick={onOpenShortcuts}
-              className="ml-auto mr-12 inline-flex items-center gap-2 border-2 border-black bg-white px-2.5 py-1 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_#000] transition-transform transition-shadow transition-colors duration-150 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000] active:translate-y-0 active:shadow-[1px_1px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+              className="ml-auto mr-12 inline-flex items-center gap-1.5 border-2 border-black bg-white px-2 py-0.5 text-[9px] font-black uppercase shadow-[2px_2px_0_#000] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#000] active:translate-y-0 active:shadow-[1px_1px_0_#000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-1"
               aria-label="View keyboard shortcuts"
             >
               Shortcuts
@@ -127,7 +132,7 @@ export function CommandCenter({
             </button>
           )}
         </DialogHeader>
-        <div className="p-4 border-b-4 border-black bg-white">
+        <div className="p-3 border-b-4 border-black bg-white">
           <input
             type="search"
             ref={inputRef}
@@ -138,7 +143,7 @@ export function CommandCenter({
             aria-label={placeholder}
             name="command-search"
             autoComplete="off"
-            className="w-full border-[3px] border-black px-4 py-3 text-sm font-black uppercase shadow-[4px_4px_0px_0px_#000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+            className="w-full border-2 border-black px-3 py-2 text-[13px] font-black uppercase shadow-neo-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
           />
         </div>
         <div className="max-h-[60vh] overflow-y-auto overscroll-contain bg-white">
@@ -160,9 +165,7 @@ export function CommandCenter({
                     const isActive = index === clampedActiveIndex;
                     const itemClass = cn(
                       "w-full text-left px-4 py-3 border-b border-stone-200 transition-colors",
-                      isActive
-                        ? "bg-black text-white"
-                        : "hover:bg-yellow-100",
+                      isActive ? "bg-black text-white" : "hover:bg-yellow-100",
                     );
                     const content = (
                       <>
@@ -170,10 +173,12 @@ export function CommandCenter({
                           {item.label}
                         </div>
                         {item.description && (
-                          <div className={cn(
-                            "text-[11px] font-bold uppercase",
-                            isActive ? "text-white/80" : "text-stone-500",
-                          )}>
+                          <div
+                            className={cn(
+                              "text-[11px] font-bold uppercase",
+                              isActive ? "text-white/80" : "text-stone-500",
+                            )}
+                          >
                             {item.description}
                           </div>
                         )}

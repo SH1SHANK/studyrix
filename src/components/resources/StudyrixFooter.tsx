@@ -9,51 +9,43 @@ const EXTERNAL_LINKS = {
 };
 
 export function StudyrixFooter({ className }: { className?: string }) {
+  const linkClass =
+    "border border-black bg-white px-2.5 py-1 shadow-[1px_1px_0_#000] hover:bg-[#FFF8E1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-1 transition-colors duration-100";
+
   return (
     <footer
       className={cn(
-        "mt-12 border-t-2 border-black bg-stone-50 px-4 py-8 sm:px-6 shadow-[0_-3px_0px_0px_#0a0a0a]",
+        "mt-6 border-t-2 border-black bg-stone-50 px-3 py-4 sm:px-5",
         className,
       )}
       aria-label="Studyrix footer"
     >
-      <div className="mx-auto w-full max-w-5xl space-y-5">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="border-2 border-black bg-yellow-50 px-4 py-3 text-[11px] font-bold uppercase text-stone-700 shadow-[1px_1px_0px_0px_#000]">
-            Study materials are shared by the student community.
-          </div>
-          <div className="text-[11px] font-bold uppercase text-stone-600">
-            Built and maintained by Team Attendrix. Powered by Attendrix.
-          </div>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-[11px] font-black uppercase">
-          <Link
-            href="/launchpad"
-            className="border-2 border-black bg-white px-3 py-1.5 shadow-[1px_1px_0px_0px_#000] hover:bg-yellow-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-          >
-            Launchpad Community
+      <div className="mx-auto w-full max-w-5xl space-y-3">
+        <p className="text-[10px] font-bold uppercase text-stone-500">
+          Materials shared by the student community · Built by Team Attendrix
+        </p>
+        <div className="flex flex-wrap gap-2 text-[10px] font-black uppercase">
+          <Link href="/launchpad" className={linkClass}>
+            Launchpad
           </Link>
           <a
             href={EXTERNAL_LINKS.attendrix}
             target="_blank"
             rel="noopener noreferrer"
-            className="border-2 border-black bg-white px-3 py-1.5 shadow-[1px_1px_0px_0px_#000] hover:bg-yellow-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+            className={linkClass}
           >
-            Attendrix Website
+            Attendrix
           </a>
           <a
             href={EXTERNAL_LINKS.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="border-2 border-black bg-white px-3 py-1.5 shadow-[1px_1px_0px_0px_#000] hover:bg-yellow-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+            className={linkClass}
           >
-            GitHub Repository
+            GitHub
           </a>
-          <Link
-            href="/privacy"
-            className="border-2 border-black bg-white px-3 py-1.5 shadow-[1px_1px_0px_0px_#000] hover:bg-yellow-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-          >
-            Privacy / Disclaimer
+          <Link href="/privacy" className={linkClass}>
+            Privacy
           </Link>
         </div>
       </div>
