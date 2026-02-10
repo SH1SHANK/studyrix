@@ -153,5 +153,4 @@ GET /api/resources/drive/file?fileId=...&export=application/pdf
 Response:
 
 - `200` with file bytes
-- `403` if the file is not allowlisted
 - `429` if rate limited

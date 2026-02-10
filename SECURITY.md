@@ -36,7 +36,7 @@ Primary risks:
 ## Key Controls in This Repo
 
 - Supabase anon key only, no service‑role keys.
-- Drive ID allowlisting enforced server‑side.
+- Drive IDs are validated and rate limited server‑side.
 - Rate limiting for Drive endpoints and search.
 - CSP headers applied in middleware.
 - No `dangerouslySetInnerHTML` usage.
@@ -57,7 +57,7 @@ These are required in production and cannot be enforced only by code:
 
 ## Security Testing Checklist
 
-- Verify Drive allowlist rejects arbitrary IDs.
+- Verify Drive ID validation rejects malformed IDs.
 - Verify CSP blocks inline scripts.
 - Confirm rate limiting returns `429` under abuse.
 - Verify no PII is available via API routes.

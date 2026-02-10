@@ -40,7 +40,6 @@ See `API_ROUTES.md` for request/response details.
 
 ### Google Drive
 
-- Drive IDs are allowlisted using `courseRecords.syllabusAssets`.
 - Drive IDs are validated and rate‑limited in middleware and route handlers.
 
 ### Local Preferences
@@ -77,7 +76,6 @@ Files of interest:
 
 - CSP headers via `middleware.ts`.
 - Rate limiting at middleware and API route level.
-- Drive allowlist enforced server‑side.
 - No auth or write operations.
 
 ## Deployment

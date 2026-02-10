@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildApiError } from "@/lib/api/errors";
 import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
-import { isDriveIdAllowed } from "@/lib/resources/drive-allowlist";
 
 export const runtime = "nodejs";
 const DRIVE_ID_PATTERN = /^[a-zA-Z0-9_-]{10,200}$/;
@@ -80,16 +79,6 @@ export async function GET(request: NextRequest) {
       const response = NextResponse.json(
         buildApiError("INTERNAL_ERROR", "Service unavailable"),
         { status: 500 },
-      );
-      response.headers.set("Cache-Control", "private, no-store");
-      return response;
-    }
-
-    const allowed = await isDriveIdAllowed(fileId, apiKey);
-    if (!allowed) {
-      const response = NextResponse.json(
-        buildApiError("FORBIDDEN", "Access denied"),
-        { status: 403 },
       );
       response.headers.set("Cache-Control", "private, no-store");
       return response;

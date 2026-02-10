@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowLeft,
+  BookOpen,
   HeartHandshake,
   MessageSquare,
   Sparkles,
@@ -11,28 +12,28 @@ import { StudyrixFooter } from "@/components/resources/StudyrixFooter";
 
 const GROUPS = [
   {
-    id: "launchpad-announcements",
-    name: "Launchpad Announcements",
-    description: "Official drops, maintenance notices, and new collections.",
-    href: "https://wa.me/?text=Please%20share%20the%20Launchpad%20Announcements%20invite%20link.",
+    id: "launchpad-b25-academics",
+    name: "B25 • Academics",
+    description: "Midsems, endsems, and study help from seniors and peers.",
+    href: "https://chat.whatsapp.com/HPK5NuYpPl9FXr8NIOlhd3?mode=gi_t",
   },
   {
-    id: "launchpad-materials",
-    name: "Launchpad Study Materials",
-    description: "Curated notes, guides, and consolidated study packs.",
-    href: "https://wa.me/?text=Please%20share%20the%20Launchpad%20Study%20Materials%20invite%20link.",
+    id: "launchpad-b25-software",
+    name: "B25 • Software",
+    description: "DSA, web dev, app dev, and AI/ML discussions.",
+    href: "https://chat.whatsapp.com/EnjBGSzZN6DHLiozCAYGzh?mode=gi_t",
   },
   {
-    id: "launchpad-pyq",
-    name: "Launchpad PYQ + Exams",
-    description: "Past papers, exam prep tips, and revision checklists.",
-    href: "https://wa.me/?text=Please%20share%20the%20Launchpad%20PYQ%20invite%20link.",
+    id: "launchpad-3.0-community",
+    name: "Launchpad 3.0 [B25s] Community",
+    description: "Announcements and community updates for B25s.",
+    href: "https://chat.whatsapp.com/LPo58YtgH4dFcq5m4xw8jK?mode=gi_t",
   },
   {
-    id: "launchpad-peer",
-    name: "Launchpad Peer Support",
-    description: "Ask questions, share resources, and coordinate study sessions.",
-    href: "https://wa.me/?text=Please%20share%20the%20Launchpad%20Peer%20Support%20invite%20link.",
+    id: "launchpad-2.0-community",
+    name: "Launchpad 2.0 [B24s] Community",
+    description: "Cross‑batch updates and ongoing resources.",
+    href: "https://chat.whatsapp.com/K4I15LoO2QiABWaDGIGDcL?mode=gi_t",
   },
 ];
 
@@ -40,7 +41,17 @@ export default function LaunchpadCommunityPage() {
   return (
     <div className="min-h-screen bg-neutral-50 pb-24 transition-colors duration-300 relative isolate overflow-x-hidden">
       <DotPatternBackground />
-      <div className="mx-auto max-w-5xl relative z-10">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 border-2 border-black bg-white px-3 py-2 text-[10px] font-black uppercase shadow-[3px_3px_0px_0px_#000]"
+      >
+        Skip to Content
+      </a>
+      <div
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto max-w-5xl relative z-10"
+      >
         <header className="bg-white border-b-4 border-black px-4 py-4 sm:px-6 shadow-[0_6px_0_#0a0a0a]">
           <div className="flex items-center gap-3">
             <Link
@@ -55,55 +66,49 @@ export default function LaunchpadCommunityPage() {
                 Launchpad Community
               </h1>
               <p className="text-xs sm:text-sm font-bold uppercase tracking-wide text-stone-500">
-                The people behind the study materials.
+                NIT Calicut • B25s welcome
               </p>
             </div>
           </div>
         </header>
 
         <section className="bg-white border-b-4 border-black px-4 py-6 sm:px-6 shadow-[0_6px_0px_0px_#0a0a0a]">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="border-2 border-black bg-yellow-50 px-4 py-4 shadow-[2px_2px_0px_0px_#000]">
+          <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="border-2 border-black bg-yellow-50 px-5 py-5 shadow-[2px_2px_0px_0px_#000]">
               <div className="flex items-center gap-2 text-xs font-black uppercase text-stone-700">
                 <Users className="h-4 w-4" aria-hidden="true" />
-                What is Launchpad?
+                Hey B25s
               </div>
-              <p className="mt-2 text-[11px] font-bold uppercase text-stone-600">
-                Launchpad is a student-led community that organizes and
-                maintains Studyrix materials. Every folder is curated by
-                volunteers who keep content accurate and up to date.
+              <p className="mt-3 text-[12px] font-bold uppercase text-stone-700">
+                Launchpad is a student‑led space by NITC B23s, built so you can
+                learn, ask, and grow with the right people from day one.
+              </p>
+              <p className="mt-3 text-[11px] font-bold uppercase text-stone-600">
+                This is your one‑stop place for academics, career prep, and
+                college life guidance. Invite your friends so no one misses out.
               </p>
             </div>
-            <div className="border-2 border-black bg-white px-4 py-4 shadow-[2px_2px_0px_0px_#000]">
-              <div className="flex items-center gap-2 text-xs font-black uppercase text-stone-700">
-                <HeartHandshake className="h-4 w-4" aria-hidden="true" />
-                Why community matters
-              </div>
-              <p className="mt-2 text-[11px] font-bold uppercase text-stone-600">
-                The community shares, reviews, and refreshes materials together.
-                It keeps access open and knowledge portable.
-              </p>
-            </div>
-            <div className="border-2 border-black bg-white px-4 py-4 shadow-[2px_2px_0px_0px_#000]">
+            <div className="border-2 border-black bg-white px-5 py-5 shadow-[2px_2px_0px_0px_#000]">
               <div className="flex items-center gap-2 text-xs font-black uppercase text-stone-700">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
-                Community ownership
+                What you get
               </div>
-              <p className="mt-2 text-[11px] font-bold uppercase text-stone-600">
-                Materials are owned and maintained by contributors. Studyrix
-                simply surfaces the Drive folders the community has approved.
-              </p>
+              <ul className="mt-3 space-y-2 text-[11px] font-bold uppercase text-stone-600">
+                <li>Guidance from seniors</li>
+                <li>Academic help for midsems and endsems</li>
+                <li>Software group for coding enthusiasts</li>
+                <li>More groups based on demand</li>
+              </ul>
             </div>
-            <div className="border-2 border-black bg-white px-4 py-4 shadow-[2px_2px_0px_0px_#000]">
-              <div className="flex items-center gap-2 text-xs font-black uppercase text-stone-700">
-                <MessageSquare className="h-4 w-4" aria-hidden="true" />
-                How to contribute
-              </div>
-              <p className="mt-2 text-[11px] font-bold uppercase text-stone-600">
-                Share verified notes, flag outdated folders, or help organize
-                tags. Join a group below to request contributor access.
-              </p>
+          </div>
+          <div className="mt-4 border-2 border-black bg-white px-5 py-4 shadow-[2px_2px_0px_0px_#000]">
+            <div className="flex items-center gap-2 text-xs font-black uppercase text-stone-700">
+              <HeartHandshake className="h-4 w-4" aria-hidden="true" />
+              Community note
             </div>
+            <p className="mt-2 text-[11px] font-bold uppercase text-stone-600">
+              “Alone we can do little, together we can do so much.” — Helen Keller
+            </p>
           </div>
         </section>
 
@@ -111,14 +116,14 @@ export default function LaunchpadCommunityPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div>
               <h2 className="text-sm font-black uppercase tracking-wide text-stone-700">
-                Official WhatsApp Groups
+                WhatsApp Groups
               </h2>
               <p className="text-[11px] font-bold uppercase text-stone-500">
-                Request an invite through WhatsApp to join.
+                Join a group to get help and share resources.
               </p>
             </div>
             <span className="border-2 border-black bg-yellow-50 px-2 py-1 text-[9px] font-black uppercase shadow-[2px_2px_0px_0px_#000]">
-              Community-run
+              Community‑run
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -135,16 +140,48 @@ export default function LaunchpadCommunityPage() {
                     {group.description}
                   </p>
                 </div>
-                <a
-                  href={group.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center border-2 border-black bg-[#FFD700] px-3 py-2 text-[10px] font-black uppercase shadow-[3px_3px_0px_0px_#000] transition-transform active:scale-95 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-                >
-                  Request Invite
-                </a>
+                {group.href ? (
+                  <a
+                    href={group.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center border-2 border-black bg-[#FFD700] px-3 py-2 text-[10px] font-black uppercase shadow-[3px_3px_0px_0px_#000] transition-transform active:scale-95 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+                  >
+                    Request Invite
+                  </a>
+                ) : (
+                  <div className="border-2 border-black bg-neutral-100 px-3 py-2 text-[10px] font-black uppercase text-stone-500 shadow-[3px_3px_0px_0px_#000]">
+                    Invite link shared in announcements
+                  </div>
+                )}
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="bg-white border-b-4 border-black px-4 py-6 sm:px-6 shadow-[0_6px_0px_0px_#0a0a0a]">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="border-2 border-black bg-white px-4 py-4 shadow-[2px_2px_0px_0px_#000]">
+              <div className="flex items-center gap-2 text-xs font-black uppercase text-stone-700">
+                <BookOpen className="h-4 w-4" aria-hidden="true" />
+                How to join
+              </div>
+              <ol className="mt-2 space-y-2 text-[11px] font-bold uppercase text-stone-600 list-decimal list-inside">
+                <li>Pick a group above</li>
+                <li>Join with the invite link</li>
+                <li>Introduce yourself and say hello</li>
+              </ol>
+            </div>
+            <div className="border-2 border-black bg-yellow-50 px-4 py-4 shadow-[2px_2px_0px_0px_#000]">
+              <div className="flex items-center gap-2 text-xs font-black uppercase text-stone-700">
+                <MessageSquare className="h-4 w-4" aria-hidden="true" />
+                How to contribute
+              </div>
+              <p className="mt-2 text-[11px] font-bold uppercase text-stone-600">
+                Share verified notes, flag outdated folders, and help organize
+                tags. We build this together.
+              </p>
+            </div>
           </div>
         </section>
       </div>
