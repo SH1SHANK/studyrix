@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    /* Base Options */
+    "target": "ES2022",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "checkJs": false, // Set true if you want type checking in .js files
+    "skipLibCheck": true,
+    "incremental": true, // Faster rebuilds by caching
+    /* Strictness & Safety (The Optimization) */
+    "strict": true,
+    "noUncheckedIndexedAccess": true, // Prevents undefined array/object access bugs
+    "noImplicitOverride": true, // clearer inheritance in classes
+    "forceConsistentCasingInFileNames": true, // Fixes cross-OS build issues
+    /* Next.js & Bundler Specifics */
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx", // Next.js compiler (SWC) handles the transform, TS just checks types
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    /* Plugins */
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "**/*.mts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
