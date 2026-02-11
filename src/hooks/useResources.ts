@@ -6,7 +6,7 @@ import {
 } from "@/lib/query/fetchers";
 import { getCacheConfig } from "@/lib/query/cache-config";
 import { queryKeys } from "@/lib/query/keys";
-import type { DriveItem, ResourceCourse } from "@/types/resources";
+import type { FileNode, ResourceCourse } from "@/types/resources";
 import type { ResourceFilters } from "@/lib/query/fetchers";
 
 export function useResourceCourses(options: {
@@ -49,7 +49,7 @@ export function useResourceFilters(departmentId: string | null) {
 export function useDriveFolder(folderId: string | null) {
   const cache = getCacheConfig("driveFolder");
 
-  return useQuery<DriveItem[], Error>({
+  return useQuery<FileNode[], Error>({
     queryKey: queryKeys.driveFolder(folderId),
     enabled: Boolean(folderId),
     staleTime: cache.staleTimeMs,

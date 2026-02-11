@@ -1,9 +1,13 @@
-/* eslint-disable @next/next/no-page-custom-font */
 import type { Metadata } from "next";
+import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import { Toaster } from "sonner";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { ClientPerformanceObserver } from "@/components/metrics/ClientPerformanceObserver";
 import "./globals.css";
+
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-sans" });
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -71,26 +75,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@100..800&family=Unbounded:wght@400..900&display=swap"
-        />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="mask-icon" href="/window.svg" color="#FFD700" />
-        <meta name="theme-color" content="#FFD700" />
-      </head>
-      <body className="antialiased font-sans overflow-x-hidden" suppressHydrationWarning>
+    <html lang="en" className={outfit.variable} suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        suppressHydrationWarning
+      >
         <QueryProvider>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:text-black focus:px-4 focus:py-2 focus:border-2 focus:border-black focus:shadow-[3px_3px_0px_0px_#000]"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:ring-2 focus:ring-ring"
           >
             Skip to content
           </a>

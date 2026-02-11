@@ -21,4 +21,14 @@ export type DriveItem = {
   size?: string;
 };
 
+export type FileNode = {
+  id: string;
+  name: string;
+  type: "file" | "folder";
+  size?: number;
+  modifiedTime: string;
+  mimeType: string;
+  tags: string[];
+};
+
 export const DRIVE_FOLDER_MIME = "application/vnd.google-apps.folder";

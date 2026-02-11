@@ -32,6 +32,7 @@ export type StudyMaterialsPreferences = {
   semesterId?: number | null;
   courseViewMode?: "grid" | "list" | "compact";
   courseViewSize?: "sm" | "md" | "lg";
+  downloadBehavior?: "off" | "wifi" | "always";
   cacheConfig?: {
     limitMb?: number | null;
   };
@@ -183,6 +184,7 @@ const mergePreferences = (
     semesterId: local.semesterId ?? stored.semesterId,
     courseViewMode: local.courseViewMode ?? stored.courseViewMode,
     courseViewSize: local.courseViewSize ?? stored.courseViewSize,
+    downloadBehavior: local.downloadBehavior ?? stored.downloadBehavior,
   };
 };
 
@@ -389,6 +391,10 @@ export function useStudyMaterialsPreferences(uid: string | null) {
     () => prefs.cacheConfig ?? {},
     [prefs.cacheConfig],
   );
+  const downloadBehavior = useMemo(
+    () => prefs.downloadBehavior ?? "wifi",
+    [prefs.downloadBehavior],
+  );
   const offlineStorageMode = useMemo(
     () => prefs.offlineStorageMode ?? "web",
     [prefs.offlineStorageMode],
@@ -539,6 +545,17 @@ export function useStudyMaterialsPreferences(uid: string | null) {
     [prefs, updateLocal],
   );
 
+  const updateDownloadBehavior = useCallback(
+    (nextBehavior: "off" | "wifi" | "always") => {
+      if (downloadBehavior === nextBehavior) return;
+      updateLocal({
+        ...prefs,
+        downloadBehavior: nextBehavior,
+      });
+    },
+    [downloadBehavior, prefs, updateLocal],
+  );
+
   const updateCacheConfig = useCallback(
     (nextLimitMb: number | null) => {
       const current = cacheConfig.limitMb ?? null;
@@ -614,6 +631,7 @@ export function useStudyMaterialsPreferences(uid: string | null) {
       semesterId,
       courseViewMode,
       courseViewSize,
+      downloadBehavior,
       cacheConfig,
       offlineStorageMode,
       toggleFavorite,
@@ -625,6 +643,7 @@ export function useStudyMaterialsPreferences(uid: string | null) {
       updateSectionOrder,
       updateDepartmentSemester,
       updateCourseView,
+      updateDownloadBehavior,
       setOfflineFile,
       removeOfflineFiles,
       replaceOfflineFiles,
@@ -645,6 +664,7 @@ export function useStudyMaterialsPreferences(uid: string | null) {
       semesterId,
       courseViewMode,
       courseViewSize,
+      downloadBehavior,
       toggleFavorite,
       setTags,
       setTagsBatch,
@@ -654,6 +674,7 @@ export function useStudyMaterialsPreferences(uid: string | null) {
       updateSectionOrder,
       updateDepartmentSemester,
       updateCourseView,
+      updateDownloadBehavior,
       setOfflineFile,
       removeOfflineFiles,
       replaceOfflineFiles,

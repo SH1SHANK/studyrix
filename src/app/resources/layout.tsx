@@ -16,9 +16,5 @@ export default function ResourcesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <main className="min-h-screen">{children}</main>
-    </>
-  );
+  return <div className="min-h-screen">{children}</div>;
 }

@@ -93,7 +93,15 @@ Response `data`:
 {
   "results": [
     {
-      "item": { "id": "...", "name": "Unit 1 Notes", "mimeType": "application/pdf" },
+      "node": {
+        "id": "...",
+        "name": "Unit 1 Notes",
+        "type": "file",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2026-01-01T00:00:00.000Z",
+        "size": 12345,
+        "tags": []
+      },
       "resourceId": "...",
       "courseId": "ME2001",
       "courseName": "Thermodynamics",
@@ -126,12 +134,65 @@ Response `data`:
   {
     "id": "...",
     "name": "Unit 1",
+    "type": "folder",
     "mimeType": "application/vnd.google-apps.folder",
-    "modifiedTime": "...",
-    "webViewLink": "...",
-    "size": "12345"
+    "modifiedTime": "2026-01-01T00:00:00.000Z",
+    "size": 12345,
+    "tags": []
   }
 ]
+```
+
+## `/api/resources/tags`
+
+Batch read/write tags for resource IDs.
+
+### GET
+
+Query parameters:
+
+- `ids` comma-separated list of resource IDs (optional if `id` is repeated)
+- `id` repeated resource IDs (optional)
+
+Example:
+
+```
+GET /api/resources/tags?ids=res_1,res_2
+GET /api/resources/tags?id=res_1&id=res_2
+```
+
+Response `data`:
+
+```json
+{
+  "tags": {
+    "res_1": ["pyq", "important"],
+    "res_2": ["notes"]
+  }
+}
+```
+
+### POST
+
+Request body:
+
+```json
+{
+  "updates": [
+    { "id": "res_1", "tags": ["pyq", "important"] },
+    { "id": "res_2", "tags": [] }
+  ]
+}
+```
+
+Header:
+
+- `x-tags-write-token`: required when `TAGS_WRITE_TOKEN` is configured
+
+Response `data`:
+
+```json
+{ "updated": 2 }
 ```
 
 ## `/api/resources/drive/file`

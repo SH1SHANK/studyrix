@@ -9,6 +9,13 @@ const MAX_EXPORT_MIME_LENGTH = 100;
 const REQUEST_TIMEOUT_MS = 10000;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 240;
+const PROXY_FORWARD_HEADERS = [
+  "content-type",
+  "content-disposition",
+  "etag",
+  "last-modified",
+  "accept-ranges",
+] as const;
 
 function isValidDriveId(value: string) {
   return DRIVE_ID_PATTERN.test(value);
@@ -27,6 +34,19 @@ async function fetchWithTimeout(input: string, init?: RequestInit) {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+function buildProxyResponseHeaders(source: Headers, bodyByteLength: number) {
+  const headers = new Headers();
+
+  for (const key of PROXY_FORWARD_HEADERS) {
+    const value = source.get(key);
+    if (value) headers.set(key, value);
+  }
+
+  headers.set("Content-Length", String(bodyByteLength));
+  headers.set("Cache-Control", "public, max-age=3600, s-maxage=3600");
+  return headers;
 }
 
 export async function GET(request: NextRequest) {
@@ -100,8 +120,7 @@ export async function GET(request: NextRequest) {
     }
 
     const buffer = await response.arrayBuffer();
-    const headers = new Headers(response.headers);
-    headers.set("Cache-Control", "public, max-age=3600, s-maxage=3600");
+    const headers = buildProxyResponseHeaders(response.headers, buffer.byteLength);
     return new NextResponse(buffer, {
       status: 200,
       headers,

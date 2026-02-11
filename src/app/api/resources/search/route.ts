@@ -7,76 +7,22 @@ import {
   buildResourceId,
   buildResourcePath,
 } from "@/lib/resources/resource-id";
-import type { DriveItem, ResourceCourse } from "@/types/resources";
-import { DRIVE_FOLDER_MIME } from "@/types/resources";
+import type { FileNode, ResourceCourse } from "@/types/resources";
+import { fetchDriveChildren, normalizeDriveItem } from "@/lib/resources/drive-server";
+import { getTagsByResourceIds } from "@/lib/resources/tags-server";
 
 export const runtime = "nodejs";
-
-const DRIVE_FIELDS =
-  "nextPageToken,files(id,name,mimeType,modifiedTime,webViewLink,iconLink,size)";
 
 const MAX_RESULTS = 200;
 const MAX_FOLDERS = 250;
 const MAX_ITEMS = 4000;
 const MAX_QUERY_LENGTH = 120;
 const DRIVE_ID_PATTERN = /^[a-zA-Z0-9_-]{10,200}$/;
-const REQUEST_TIMEOUT_MS = 10000;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 120;
 
 function isValidDriveId(value: string) {
   return DRIVE_ID_PATTERN.test(value);
-}
-
-async function fetchWithTimeout(input: string, init?: RequestInit) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-  try {
-    return await fetch(input, { ...init, signal: controller.signal });
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-async function fetchDriveChildren(folderId: string, apiKey: string) {
-  const items: DriveItem[] = [];
-  let pageToken: string | null = null;
-  let pageCount = 0;
-
-  do {
-    const params = new URLSearchParams();
-    params.set("q", `'${folderId}' in parents and trashed = false`);
-    params.set("fields", DRIVE_FIELDS);
-    params.set("pageSize", "1000");
-    params.set("orderBy", "folder,name");
-    params.set("supportsAllDrives", "true");
-    params.set("includeItemsFromAllDrives", "true");
-    params.set("key", apiKey);
-    if (pageToken) params.set("pageToken", pageToken);
-
-    const response = await fetchWithTimeout(
-      `https://www.googleapis.com/drive/v3/files?${params.toString()}`,
-      {
-        cache: "force-cache",
-        next: { revalidate: 60 * 60 },
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Drive request failed");
-    }
-
-    const payload = (await response.json()) as {
-      files?: DriveItem[];
-      nextPageToken?: string;
-    };
-
-    items.push(...(payload.files ?? []));
-    pageToken = payload.nextPageToken ?? null;
-    pageCount += 1;
-  } while (pageToken && pageCount < 10);
-
-  return items;
 }
 
 export async function GET(request: NextRequest) {
@@ -189,7 +135,7 @@ export async function GET(request: NextRequest) {
 
     const normalized = rawQuery.toLowerCase();
     const results: Array<{
-      item: DriveItem;
+      node: FileNode;
       resourceId: string;
       courseId: string;
       courseName: string | null;
@@ -214,6 +160,7 @@ export async function GET(request: NextRequest) {
 
       const items = await fetchDriveChildren(current.folderId, apiKey);
       for (const item of items) {
+        const node = normalizeDriveItem(item, []);
         scannedItems += 1;
         if (results.length >= MAX_RESULTS || scannedItems >= MAX_ITEMS) {
           truncated = true;
@@ -222,7 +169,7 @@ export async function GET(request: NextRequest) {
 
         if (item.name?.toLowerCase().includes(normalized)) {
           results.push({
-            item,
+            node,
             resourceId: buildResourceId({
               courseId: current.courseId,
               path: buildResourcePath(current.pathIds),
@@ -235,7 +182,7 @@ export async function GET(request: NextRequest) {
           });
         }
 
-        if (item.mimeType === DRIVE_FOLDER_MIME) {
+        if (node.type === "folder") {
           if (visited.size >= MAX_FOLDERS) {
             truncated = true;
             break;
@@ -252,7 +199,16 @@ export async function GET(request: NextRequest) {
       if (truncated) break;
     }
 
-    const response = NextResponse.json(buildApiSuccess({ results, truncated }));
+    const tagsByNodeId = await getTagsByResourceIds(results.map((result) => result.node.id));
+    const mergedResults = results.map((result) => ({
+      ...result,
+      node: {
+        ...result.node,
+        tags: tagsByNodeId[result.node.id] ?? result.node.tags,
+      },
+    }));
+
+    const response = NextResponse.json(buildApiSuccess({ results: mergedResults, truncated }));
     response.headers.set(
       "Cache-Control",
       "public, max-age=60, s-maxage=300, stale-while-revalidate=3600",

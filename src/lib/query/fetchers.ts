@@ -1,5 +1,5 @@
 import { fetchJson } from "@/lib/api/fetch-json";
-import type { DriveItem, ResourceCourse } from "@/types/resources";
+import type { FileNode, ResourceCourse } from "@/types/resources";
 
 export type ResourceFilters = {
   departments: string[];
@@ -49,7 +49,7 @@ export async function fetchDriveFolder(options: {
 }) {
   const params = new URLSearchParams();
   params.set("folderId", options.folderId);
-  return fetchJson<DriveItem[]>(
+  return fetchJson<FileNode[]>(
     `/api/resources/drive?${params.toString()}`,
     { signal: options.signal },
     { metricName: "drive-folder" },

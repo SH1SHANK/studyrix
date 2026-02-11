@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import { ClassNameValue, twMerge } from "tailwind-merge";
+import { twMerge } from "tailwind-merge";
 
-export function cn(...classes: ClassNameValue[]) {
+export function cn(...classes: unknown[]) {
   return twMerge(clsx(classes));
 }
 
